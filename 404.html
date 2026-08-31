@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Khu Vực Cấm Vào | Trang Không Tồn Tại</title>
+    <!-- Thêm Favicon hình khiên bảo vệ -->
+    <link rel="icon" type="image/x-icon" href="https://icons8.com">
+    <!-- Google Fonts để chữ đẹp hơn -->
+    <link href="https://googleapis.com" rel="family">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        /* Biểu tượng an ninh phát sáng */
+        .security-icon {
+            font-size: 100px;
+            color: #ef4444;
+            animation: pulse 2s infinite;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 90px;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 10px 0 20px 0;
+            color: #f1f5f9;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 16px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Nút quay lại kiểu lực lượng an ninh */
+        .btn-back {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-back:hover {
+            background-color: #0ea5e9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6);
+        }
+
+        /* Hiệu ứng đèn chớp cảnh báo bụi bẩn/bảo vệ */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+                text-shadow: 0 0 30px rgba(239, 68, 68, 0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Biểu tượng Lá chắn / Cảnh báo bảo vệ (Dùng mã SVG tích hợp sẵn cho an toàn) -->
+        <div class="security-icon">
+            <svg xmlns="http://w3.org" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+        
+        <h1>404</h1>
+        <h2>Khu Vực Cấm Vào!</h2>
+        <p>Yêu cầu truy cập của bạn đã bị từ chối hoặc trang này không tồn tại. Đội ngũ bảo vệ an ninh mạng của chúng tôi đã ghi nhận sự cố này. Vui lòng quay lại khu vực an toàn.</p>
+        
+        <a href="/" class="btn-back">Quay Lại Cổng Chính</a>
+    </div>
+
+</body>
+</html>
