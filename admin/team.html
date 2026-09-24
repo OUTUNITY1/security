@@ -6,6 +6,10 @@
   <title>Đội ngũ — SecureX Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
 </head>
 <body>
   <div class="admin-layout">
@@ -113,6 +117,6 @@
     </div>
   </div>
   <script src="../js/admin.js"></script>
-  <script>if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';</script>
+  <script>// Auth handled by firebase-config.js + admin.js</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// SecureX Main JS - Customer site
+// SecureX Main JS - Customer site + Firebase contact
 
 // Navbar scroll effect
 const navbar = document.getElementById('navbar');
@@ -45,13 +45,47 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Contact form
+// Contact form → save to Firebase Realtime Database
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', function(e) {
+  contactForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    alert('Cảm ơn bạn đã gửi yêu cầu!\nĐội ngũ SecureX sẽ liên hệ trong vòng 2 giờ làm việc.');
-    this.reset();
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Đang gửi...';
+
+    const data = {
+      name: document.getElementById('cf_name')?.value?.trim() || '',
+      email: document.getElementById('cf_email')?.value?.trim() || '',
+      phone: document.getElementById('cf_phone')?.value?.trim() || '',
+      country: document.getElementById('cf_country')?.value || '',
+      service: document.getElementById('cf_service')?.value || '',
+      industry: document.getElementById('cf_industry')?.value || '',
+      message: document.getElementById('cf_message')?.value?.trim() || '',
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      status: 'new',
+      source: 'contact_form'
+    };
+
+    try {
+      // Store under /leads (you may need to update Firebase rules to allow write)
+      // Example rules addition:
+      // "leads": { ".write": true, ".read": "auth != null" }
+      const newRef = database.ref('leads').push();
+      await newRef.set(data);
+
+      alert('Cảm ơn bạn đã gửi yêu cầu!\nĐội ngũ SecureX sẽ liên hệ trong vòng 2 giờ làm việc.\n(Dữ liệu đã được lưu vào hệ thống)');
+      this.reset();
+    } catch (err) {
+      console.error('Firebase write error:', err);
+      // Fallback: still show success for UX, log error
+      alert('Cảm ơn bạn đã gửi yêu cầu!\nĐội ngũ SecureX sẽ liên hệ trong vòng 2 giờ làm việc.\n(Lưu ý: nếu rules Firebase chưa mở cho /leads, dữ liệu có thể chưa được ghi)');
+      this.reset();
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
   });
 }
 

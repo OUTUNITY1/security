@@ -1,82 +1,104 @@
 # SecureX — Cybersecurity Platform 2026
 
-Website demo cho công ty bảo mật mạng (Cybersecurity) với giao diện hiện đại năm 2026.
+Website demo cho công ty bảo mật mạng (Cybersecurity) với giao diện hiện đại năm 2026 + **Firebase Auth & Realtime Database**.
 
 ## Cấu trúc
 
 ```
 security-site/
-├── index.html          # Trang khách hàng (Landing page)
-├── login.html          # Đăng nhập Admin
+├── index.html              # Trang khách hàng (Landing page)
+├── login.html              # Đăng nhập Admin (chỉ lga775385@gmail.com)
+├── client-register.html    # Đăng ký Client (tự do)
+├── client-login.html       # Đăng nhập Client
+├── client-dashboard.html   # Dashboard Client (xem data từ DB)
 ├── css/
-│   └── style.css       # Toàn bộ CSS (dark theme, glassmorphism)
+│   └── style.css
 ├── js/
-│   ├── main.js         # JS trang khách
-│   └── admin.js        # JS admin (logout, sidebar...)
+│   ├── firebase-config.js  # Firebase init + helpers
+│   ├── main.js             # JS trang khách + lưu contact form
+│   └── admin.js            # JS admin + auth protection
 └── admin/
-    ├── dashboard.html  # Dashboard chính + charts
-    ├── threats.html    # Quản lý Threats
-    ├── tickets.html    # Quản lý Tickets
-    ├── clients.html    # Quản lý Khách hàng
-    ├── reports.html    # Báo cáo & Compliance
-    ├── assets.html     # Asset Inventory
-    ├── settings.html   # Cài đặt hệ thống
-    └── team.html       # Đội ngũ SOC
+    ├── dashboard.html
+    ├── threats.html
+    ├── tickets.html
+    ├── clients.html        # Load clients từ Firebase (nếu rules cho phép)
+    ├── reports.html
+    ├── assets.html
+    ├── settings.html
+    └── team.html
 ```
+
+## Firebase
+
+**Project:** `findhome777`  
+**Realtime Database:** `https://findhome777-default-rtdb.firebaseio.com`
+
+### Auth
+- **Admin:** Chỉ email `lga775385@gmail.com` được phép đăng nhập trang Admin.
+- **Client:** Đăng ký / đăng nhập tự do qua `client-register.html` / `client-login.html`.
+
+### Cấu trúc dữ liệu lưu trong Realtime DB
+
+```
+/users/{uid}
+  - uid, email, displayName, role ("admin" | "client")
+  - country, phone, industry, package
+  - healthScore, threats30d, openTickets, status
+  - metrics: { uptime, threatsBlocked, incidentsResolved, avgResponseMs }
+  - createdAt, lastLogin
+
+/leads/{pushId}          # từ form liên hệ trên trang chủ
+  - name, email, phone, country, service, industry, message
+  - createdAt, status, source
+```
+
+### Security Rules khuyến nghị (cập nhật trong Firebase Console)
+
+```json
+{
+  "rules": {
+    "users": {
+      "$user_id": {
+        ".read": "$user_id === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'",
+        ".write": "$user_id === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      }
+    },
+    "leads": {
+      ".write": true,
+      ".read": "auth != null"
+    }
+  }
+}
+```
+
+> Rules gốc bạn cung cấp chỉ cho user đọc/ghi chính mình. Để Admin xem danh sách clients và form liên hệ hoạt động, hãy mở rộng như trên.
 
 ## Cách chạy
 
-Chỉ cần mở file `index.html` bằng trình duyệt (hoặc dùng Live Server).
+1. Mở `index.html` bằng Live Server hoặc bất kỳ static server nào.
+2. Tạo tài khoản Admin trước trong Firebase Console (Authentication → Users) với email `lga775385@gmail.com` và mật khẩu bạn chọn.
+3. Client đăng ký trực tiếp trên trang web.
 
-Không cần backend — tất cả dữ liệu là mock/demo.
+## Đăng nhập
 
-## Đăng nhập Admin
+| Vai trò | URL | Email |
+|---------|-----|-------|
+| **Admin** | `login.html` | **chỉ** `lga775385@gmail.com` |
+| **Client** | `client-login.html` / `client-register.html` | bất kỳ (tự do) |
 
-- **URL:** `login.html`
-- **Email:** `admin@securex.vn`
-- **Password:** `admin123`
+## Tính năng đã tích hợp Firebase
 
-Sau khi đăng nhập sẽ chuyển vào `admin/dashboard.html`.
-
-## Tính năng
-
-### Trang khách hàng
-- Hero section hiện đại với animation
-- Dịch vụ bảo mật (6 cards)
-- About / Features
-- Testimonials
-- Contact form
-- Footer đầy đủ
-- Responsive mobile
-
-### Admin Dashboard
-- Sidebar navigation
-- Stats cards realtime-style
-- Charts (Chart.js): Threats theo thời gian + phân loại
-- Bảng Threats gần đây
-- Activity feed
-- Client health overview
-- Quản lý Threats (filter, search, modal chi tiết)
-- Quản lý Tickets (tạo mới, xem, filter)
-- Quản lý Clients
-- Báo cáo Compliance
-- Asset Inventory
-- Settings (account, password, notifications, API)
-- Team members
+- Đăng nhập / Đăng ký Email + Password
+- Chỉ Admin email được vào `/admin/*`
+- Client lưu profile + quốc gia + metrics vào `/users/{uid}`
+- Form liên hệ lưu vào `/leads`
+- Client Dashboard đọc dữ liệu thật từ DB
+- Admin Clients page cố gắng load danh sách clients thật (cần rules)
 
 ## Tech Stack
 
-- HTML5
-- CSS3 (Custom Properties, Glassmorphism, Gradients)
-- Vanilla JavaScript
-- Chart.js 4 (CDN)
+- HTML5 + CSS3 (Glassmorphism, Dark theme)
+- Vanilla JS
+- Firebase Auth + Realtime Database (compat SDK)
+- Chart.js 4
 - Google Fonts (Inter)
-
-## Design
-
-- Dark theme chuyên nghiệp
-- Accent cyan (#00f0ff) + purple (#7c3aed)
-- Glassmorphism cards
-- Smooth transitions
-- Fully responsive
-- 2026 modern aesthetic

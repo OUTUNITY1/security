@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard — SecureX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo"><div class="logo-icon">🛡</div> SecureX</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Client Portal</div>
+          <a href="client-dashboard.html" class="active"><span class="icon">📊</span> Dashboard</a>
+          <a href="#"><span class="icon">🛡</span> Bảo mật</a>
+          <a href="#"><span class="icon">🎫</span> Tickets</a>
+          <a href="#"><span class="icon">📋</span> Báo cáo</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="doLogout()">
+          <div class="user-avatar" id="userAvatar">CL</div>
+          <div class="user-details"><h5 id="userName">Client</h5><span id="userEmail">...</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Client Dashboard</h1>
+          <p>Tổng quan bảo mật tài khoản của bạn</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-outline btn-sm" onclick="doLogout()">Đăng xuất</button>
+          <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="stats-cards" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 28px;">
+          <div class="stat-card glass"><div class="stat-icon green">✅</div><h3 id="healthScore">--</h3><p>Health Score</p></div>
+          <div class="stat-card glass"><div class="stat-icon blue">🌍</div><h3 id="country">--</h3><p>Quốc gia</p></div>
+          <div class="stat-card glass"><div class="stat-icon orange">⚠</div><h3 id="threats">--</h3><p>Threats (30d)</p></div>
+          <div class="stat-card glass"><div class="stat-icon purple">🎫</div><h3 id="tickets">--</h3><p>Open Tickets</p></div>
+        </div>
+
+        <div class="dashboard-card glass" style="margin-bottom:24px;">
+          <h3 style="margin-bottom:16px;">Thông tin tài khoản</h3>
+          <div id="profileInfo" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; color:var(--text-secondary);">
+            <div>Đang tải...</div>
+          </div>
+        </div>
+
+        <div class="dashboard-card glass">
+          <h3 style="margin-bottom:16px;">Metrics bảo mật</h3>
+          <div id="metricsInfo" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:16px;">
+            <div>Đang tải...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'client-login.html';
+        return;
+      }
+
+      // Load own data (rules allow only own uid)
+      try {
+        const snap = await database.ref('users/' + user.uid).once('value');
+        const data = snap.val();
+
+        if (!data) {
+          document.getElementById('profileInfo').innerHTML = '<p>Chưa có dữ liệu profile. Vui lòng cập nhật.</p>';
+          return;
+        }
+
+        // Header
+        document.getElementById('userName').textContent = data.displayName || 'Client';
+        document.getElementById('userEmail').textContent = data.email || user.email;
+        const initials = (data.displayName || 'CL').split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+
+        // Stats
+        document.getElementById('healthScore').textContent = (data.healthScore || 100) + '%';
+        document.getElementById('country').textContent = data.country || 'N/A';
+        document.getElementById('threats').textContent = (data.threats30d || 0).toLocaleString();
+        document.getElementById('tickets').textContent = data.openTickets || 0;
+
+        // Profile
+        document.getElementById('profileInfo').innerHTML = `
+          <div><strong style="color:var(--text-primary)">Tên:</strong><br>${data.displayName || '-'}</div>
+          <div><strong style="color:var(--text-primary)">Email:</strong><br>${data.email || '-'}</div>
+          <div><strong style="color:var(--text-primary)">Quốc gia:</strong><br>${data.country || '-'}</div>
+          <div><strong style="color:var(--text-primary)">Điện thoại:</strong><br>${data.phone || '-'}</div>
+          <div><strong style="color:var(--text-primary)">Ngành:</strong><br>${data.industry || '-'}</div>
+          <div><strong style="color:var(--text-primary)">Gói:</strong><br>${data.package || '-'}</div>
+          <div><strong style="color:var(--text-primary)">Trạng thái:</strong><br><span class="status-badge active">${data.status || 'Healthy'}</span></div>
+        `;
+
+        // Metrics
+        const m = data.metrics || {};
+        document.getElementById('metricsInfo').innerHTML = `
+          <div class="stat-card glass" style="padding:16px;"><h3 style="font-size:1.4rem;">${m.uptime || 99.99}%</h3><p>Uptime</p></div>
+          <div class="stat-card glass" style="padding:16px;"><h3 style="font-size:1.4rem;">${(m.threatsBlocked || 0).toLocaleString()}</h3><p>Threats blocked</p></div>
+          <div class="stat-card glass" style="padding:16px;"><h3 style="font-size:1.4rem;">${m.incidentsResolved || 0}</h3><p>Incidents resolved</p></div>
+          <div class="stat-card glass" style="padding:16px;"><h3 style="font-size:1.4rem;">${m.avgResponseMs || 0}ms</h3><p>Avg response</p></div>
+        `;
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('profileInfo').innerHTML = '<p style="color:#f87171;">Không thể tải dữ liệu (kiểm tra rules Firebase).</p>';
+      }
+    });
+  </script>
+</body>
+</html>

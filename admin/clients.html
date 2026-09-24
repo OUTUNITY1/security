@@ -6,6 +6,10 @@
   <title>Khách hàng — SecureX Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
 </head>
 <body>
   <div class="admin-layout">
@@ -193,12 +197,88 @@
 
   <script src="../js/admin.js"></script>
   <script>
-    if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';
+    // Auth handled by firebase-config.js + admin.js
     function openClientModal() { document.getElementById('clientModal').classList.add('show'); }
     function closeClientModal() { document.getElementById('clientModal').classList.remove('show'); }
+
+    // Try load real clients from Firebase (requires rules allowing admin read of /users)
+    // Recommended rules (update in Firebase Console):
+    /*
+    {
+      "rules": {
+        "users": {
+          "$user_id": {
+            ".read": "$user_id === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'",
+            ".write": "$user_id === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'"
+          }
+        },
+        "leads": {
+          ".write": true,
+          ".read": "auth != null"
+        }
+      }
+    }
+    */
+    async function loadClientsFromFirebase() {
+      const tbody = document.querySelector('table tbody');
+      if (!tbody) return;
+      try {
+        const snap = await database.ref('users').orderByChild('role').equalTo('client').once('value');
+        const clients = snap.val();
+        if (!clients) {
+          // keep existing mock rows
+          console.log('No clients in DB yet or rules block list');
+          return;
+        }
+        // Clear mock and render real
+        tbody.innerHTML = '';
+        let total = 0, healthy = 0, attention = 0, critical = 0;
+        Object.values(clients).forEach(c => {
+          total++;
+          const score = c.healthScore || 100;
+          let statusClass = 'active', statusText = 'Healthy';
+          if (score < 60) { statusClass = 'critical'; statusText = 'Critical'; critical++; }
+          else if (score < 85) { statusClass = 'pending'; statusText = 'Attention'; attention++; }
+          else { healthy++; }
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${c.displayName || 'N/A'}</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">${c.email || ''}</span></td>
+            <td>${c.industry || '-'}</td>
+            <td>${c.package || '-'}</td>
+            <td style="color:var(--${score>=85?'success':score>=60?'warning':'danger'});font-weight:600;">${score}%</td>
+            <td>${(c.threats30d || 0).toLocaleString()}</td>
+            <td>${c.openTickets || 0}</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+        // Update stats cards if present
+        const cards = document.querySelectorAll('.stats-cards .stat-card h3');
+        if (cards.length >= 4) {
+          cards[0].textContent = total.toLocaleString();
+          cards[1].textContent = healthy.toLocaleString();
+          cards[2].textContent = attention.toLocaleString();
+          cards[3].textContent = critical.toLocaleString();
+        }
+      } catch (err) {
+        console.warn('Cannot list all clients (rules restriction). Showing demo data.', err);
+      }
+    }
+
+    // After auth ready, try load
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged(user => {
+        if (user && isAdminUser(user)) {
+          loadClientsFromFirebase();
+        }
+      });
+    }
+
     document.getElementById('clientForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      alert('Client đã được thêm thành công!');
+      alert('Client đã được thêm thành công! (Demo - để thêm thật hãy dùng trang Đăng ký Client)');
       closeClientModal();
     });
   </script>
