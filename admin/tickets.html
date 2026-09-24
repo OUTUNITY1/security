@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tickets — SecureX Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo"><div class="logo-icon">🛡</div> SecureX</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Tổng quan</div>
+          <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+          <a href="threats.html"><span class="icon">⚠</span> Threats <span class="badge">12</span></a>
+          <a href="tickets.html" class="active"><span class="icon">🎫</span> Tickets <span class="badge">5</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Quản lý</div>
+          <a href="clients.html"><span class="icon">👥</span> Khách hàng</a>
+          <a href="reports.html"><span class="icon">📋</span> Báo cáo</a>
+          <a href="assets.html"><span class="icon">💻</span> Assets</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ thống</div>
+          <a href="settings.html"><span class="icon">⚙</span> Cài đặt</a>
+          <a href="team.html"><span class="icon">🧑‍💻</span> Đội ngũ</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="logout()">
+          <div class="user-avatar">AD</div>
+          <div class="user-details"><h5>Admin SecureX</h5><span>Super Admin</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Ticket Management</h1>
+          <p>Quản lý yêu cầu hỗ trợ và sự cố bảo mật</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm" onclick="openNewTicket()">+ Tạo Ticket</button>
+          <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="stats-cards" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 28px;">
+          <div class="stat-card glass"><div class="stat-icon orange">🎫</div><h3>28</h3><p>Tổng open</p></div>
+          <div class="stat-card glass"><div class="stat-icon red">🔥</div><h3>5</h3><p>Critical</p></div>
+          <div class="stat-card glass"><div class="stat-icon blue">⏱</div><h3>1.2h</h3><p>Avg response</p></div>
+          <div class="stat-card glass"><div class="stat-icon green">✅</div><h3>94%</h3><p>SLA met</p></div>
+        </div>
+
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">Tất cả</button>
+          <button class="filter-btn" data-filter="open">Open</button>
+          <button class="filter-btn" data-filter="pending">Pending</button>
+          <button class="filter-btn" data-filter="resolved">Resolved</button>
+        </div>
+
+        <div class="dashboard-card glass">
+          <div class="table-wrapper">
+            <table id="ticketsTable">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Tiêu đề</th>
+                  <th>Client</th>
+                  <th>Priority</th>
+                  <th>Assignee</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-status="open">
+                  <td>#TK-2847</td>
+                  <td>Ransomware investigation support</td>
+                  <td>TechViet Bank</td>
+                  <td><span class="status-badge critical">Critical</span></td>
+                  <td>Nguyễn An</td>
+                  <td><span class="status-badge open">Open</span></td>
+                  <td>30 phút trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewTicket('#TK-2847')">Xem</button></td>
+                </tr>
+                <tr data-status="pending">
+                  <td>#TK-2845</td>
+                  <td>False positive review — WAF rules</td>
+                  <td>CloudPay Fintech</td>
+                  <td><span class="status-badge medium">Medium</span></td>
+                  <td>Trần Bình</td>
+                  <td><span class="status-badge pending">Pending</span></td>
+                  <td>2 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewTicket('#TK-2845')">Xem</button></td>
+                </tr>
+                <tr data-status="open">
+                  <td>#TK-2842</td>
+                  <td>New endpoint onboarding request</td>
+                  <td>MediCare VN</td>
+                  <td><span class="status-badge low">Low</span></td>
+                  <td>Lê Cường</td>
+                  <td><span class="status-badge open">Open</span></td>
+                  <td>4 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewTicket('#TK-2842')">Xem</button></td>
+                </tr>
+                <tr data-status="open">
+                  <td>#TK-2839</td>
+                  <td>Zero-day alert investigation</td>
+                  <td>LogiTrans Asia</td>
+                  <td><span class="status-badge critical">Critical</span></td>
+                  <td>Nguyễn An</td>
+                  <td><span class="status-badge open">Open</span></td>
+                  <td>5 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewTicket('#TK-2839')">Xem</button></td>
+                </tr>
+                <tr data-status="resolved">
+                  <td>#TK-2835</td>
+                  <td>Phishing campaign cleanup</td>
+                  <td>MediCare VN</td>
+                  <td><span class="status-badge high">High</span></td>
+                  <td>Trần Bình</td>
+                  <td><span class="status-badge resolved">Resolved</span></td>
+                  <td>1 ngày trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewTicket('#TK-2835')">Xem</button></td>
+                </tr>
+                <tr data-status="pending">
+                  <td>#TK-2830</td>
+                  <td>Compliance report request Q3</td>
+                  <td>EduTech Solutions</td>
+                  <td><span class="status-badge medium">Medium</span></td>
+                  <td>Phạm Dung</td>
+                  <td><span class="status-badge pending">Pending</span></td>
+                  <td>1 ngày trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewTicket('#TK-2830')">Xem</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Ticket Modal -->
+  <div class="modal-overlay" id="ticketModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="ticketModalTitle">Tạo Ticket mới</h3>
+        <button class="modal-close" onclick="closeTicketModal()">&times;</button>
+      </div>
+      <form id="ticketForm">
+        <div class="form-group">
+          <label>Tiêu đề</label>
+          <input type="text" id="ticketTitle" placeholder="Mô tả ngắn gọn vấn đề..." required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Client</label>
+            <select id="ticketClient" required>
+              <option value="">Chọn client</option>
+              <option>TechViet Bank</option>
+              <option>CloudPay Fintech</option>
+              <option>MediCare VN</option>
+              <option>LogiTrans Asia</option>
+              <option>EduTech Solutions</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="ticketPriority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mô tả chi tiết</label>
+          <textarea id="ticketDesc" placeholder="Chi tiết sự cố, bước tái hiện..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeTicketModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary">Tạo Ticket</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const f = this.dataset.filter;
+        document.querySelectorAll('#ticketsTable tbody tr').forEach(row => {
+          row.style.display = (f === 'all' || row.dataset.status === f) ? '' : 'none';
+        });
+      });
+    });
+
+    function openNewTicket() {
+      document.getElementById('ticketModalTitle').textContent = 'Tạo Ticket mới';
+      document.getElementById('ticketForm').reset();
+      document.getElementById('ticketModal').classList.add('show');
+    }
+
+    function closeTicketModal() {
+      document.getElementById('ticketModal').classList.remove('show');
+    }
+
+    function viewTicket(id) {
+      document.getElementById('ticketModalTitle').textContent = 'Ticket ' + id;
+      document.getElementById('ticketForm').innerHTML = `
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Chi tiết ticket ${id}. Đây là dữ liệu demo.</p>
+        <div class="form-group"><label>Status</label>
+          <select><option>Open</option><option>Pending</option><option selected>In Progress</option><option>Resolved</option></select>
+        </div>
+        <div class="form-group"><label>Comment</label><textarea placeholder="Thêm ghi chú..."></textarea></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeTicketModal()">Đóng</button>
+          <button type="button" class="btn btn-success" onclick="alert('Ticket updated!'); closeTicketModal();">Cập nhật</button>
+        </div>
+      `;
+      document.getElementById('ticketModal').classList.add('show');
+    }
+
+    document.getElementById('ticketForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Ticket đã được tạo thành công!');
+      closeTicketModal();
+    });
+  </script>
+</body>
+</html>

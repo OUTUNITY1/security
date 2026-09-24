@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assets — SecureX Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo"><div class="logo-icon">🛡</div> SecureX</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Tổng quan</div>
+          <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+          <a href="threats.html"><span class="icon">⚠</span> Threats <span class="badge">12</span></a>
+          <a href="tickets.html"><span class="icon">🎫</span> Tickets <span class="badge">5</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Quản lý</div>
+          <a href="clients.html"><span class="icon">👥</span> Khách hàng</a>
+          <a href="reports.html"><span class="icon">📋</span> Báo cáo</a>
+          <a href="assets.html" class="active"><span class="icon">💻</span> Assets</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ thống</div>
+          <a href="settings.html"><span class="icon">⚙</span> Cài đặt</a>
+          <a href="team.html"><span class="icon">🧑‍💻</span> Đội ngũ</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="logout()">
+          <div class="user-avatar">AD</div>
+          <div class="user-details"><h5>Admin SecureX</h5><span>Super Admin</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Asset Inventory</h1>
+          <p>Quản lý endpoints, servers và cloud resources</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm">+ Thêm Asset</button>
+          <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="stats-cards" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 28px;">
+          <div class="stat-card glass"><div class="stat-icon blue">💻</div><h3>8,452</h3><p>Total assets</p></div>
+          <div class="stat-card glass"><div class="stat-icon green">✅</div><h3>8,201</h3><p>Protected</p></div>
+          <div class="stat-card glass"><div class="stat-icon orange">⚠</div><h3>187</h3><p>Outdated agent</p></div>
+          <div class="stat-card glass"><div class="stat-icon red">🔥</div><h3>64</h3><p>Unprotected</p></div>
+        </div>
+
+        <div class="dashboard-card glass">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Asset Name</th>
+                  <th>Type</th>
+                  <th>Client</th>
+                  <th>OS / Platform</th>
+                  <th>Agent Status</th>
+                  <th>Last Seen</th>
+                  <th>Risk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>SRV-DB-01</strong></td>
+                  <td>Server</td>
+                  <td>TechViet Bank</td>
+                  <td>Ubuntu 24.04</td>
+                  <td><span class="status-badge active">Online</span></td>
+                  <td>1 phút trước</td>
+                  <td><span class="status-badge low">Low</span></td>
+                </tr>
+                <tr>
+                  <td><strong>WS-FIN-042</strong></td>
+                  <td>Workstation</td>
+                  <td>CloudPay Fintech</td>
+                  <td>Windows 11</td>
+                  <td><span class="status-badge active">Online</span></td>
+                  <td>3 phút trước</td>
+                  <td><span class="status-badge medium">Medium</span></td>
+                </tr>
+                <tr>
+                  <td><strong>K8S-PROD-CLUSTER</strong></td>
+                  <td>Kubernetes</td>
+                  <td>CloudPay Fintech</td>
+                  <td>EKS 1.30</td>
+                  <td><span class="status-badge active">Online</span></td>
+                  <td>5 phút trước</td>
+                  <td><span class="status-badge low">Low</span></td>
+                </tr>
+                <tr>
+                  <td><strong>LAPTOP-CEO-01</strong></td>
+                  <td>Laptop</td>
+                  <td>LogiTrans Asia</td>
+                  <td>macOS 15</td>
+                  <td><span class="status-badge pending">Offline</span></td>
+                  <td>2 ngày trước</td>
+                  <td><span class="status-badge high">High</span></td>
+                </tr>
+                <tr>
+                  <td><strong>FW-EDGE-02</strong></td>
+                  <td>Firewall</td>
+                  <td>MediCare VN</td>
+                  <td>Palo Alto</td>
+                  <td><span class="status-badge active">Online</span></td>
+                  <td>30 giây trước</td>
+                  <td><span class="status-badge low">Low</span></td>
+                </tr>
+                <tr>
+                  <td><strong>S3-BACKUP-BUCKET</strong></td>
+                  <td>Cloud Storage</td>
+                  <td>EduTech Solutions</td>
+                  <td>AWS S3</td>
+                  <td><span class="status-badge active">Monitored</span></td>
+                  <td>Realtime</td>
+                  <td><span class="status-badge low">Low</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/admin.js"></script>
+  <script>if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đội ngũ — SecureX Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo"><div class="logo-icon">🛡</div> SecureX</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Tổng quan</div>
+          <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+          <a href="threats.html"><span class="icon">⚠</span> Threats <span class="badge">12</span></a>
+          <a href="tickets.html"><span class="icon">🎫</span> Tickets <span class="badge">5</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Quản lý</div>
+          <a href="clients.html"><span class="icon">👥</span> Khách hàng</a>
+          <a href="reports.html"><span class="icon">📋</span> Báo cáo</a>
+          <a href="assets.html"><span class="icon">💻</span> Assets</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ thống</div>
+          <a href="settings.html"><span class="icon">⚙</span> Cài đặt</a>
+          <a href="team.html" class="active"><span class="icon">🧑‍💻</span> Đội ngũ</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="logout()">
+          <div class="user-avatar">AD</div>
+          <div class="user-details"><h5>Admin SecureX</h5><span>Super Admin</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Đội ngũ SOC</h1>
+          <p>Quản lý thành viên và phân quyền</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm" onclick="alert('Invite sent!')">+ Mời thành viên</button>
+          <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="services-grid">
+          <div class="service-card glass" style="text-align: center;">
+            <div class="author-avatar" style="width: 64px; height: 64px; margin: 0 auto 16px; font-size: 1.2rem;">NA</div>
+            <h3>Nguyễn An</h3>
+            <p style="color: var(--accent); margin-bottom: 8px;">Senior SOC Analyst</p>
+            <p style="font-size: 0.85rem;">an.nguyen@securex.vn</p>
+            <div style="margin-top: 16px;">
+              <span class="status-badge active">Online</span>
+            </div>
+          </div>
+          <div class="service-card glass" style="text-align: center;">
+            <div class="author-avatar" style="width: 64px; height: 64px; margin: 0 auto 16px; font-size: 1.2rem;">TB</div>
+            <h3>Trần Bình</h3>
+            <p style="color: var(--accent); margin-bottom: 8px;">Threat Hunter</p>
+            <p style="font-size: 0.85rem;">binh.tran@securex.vn</p>
+            <div style="margin-top: 16px;">
+              <span class="status-badge active">Online</span>
+            </div>
+          </div>
+          <div class="service-card glass" style="text-align: center;">
+            <div class="author-avatar" style="width: 64px; height: 64px; margin: 0 auto 16px; font-size: 1.2rem;">LC</div>
+            <h3>Lê Cường</h3>
+            <p style="color: var(--accent); margin-bottom: 8px;">Incident Responder</p>
+            <p style="font-size: 0.85rem;">cuong.le@securex.vn</p>
+            <div style="margin-top: 16px;">
+              <span class="status-badge pending">Away</span>
+            </div>
+          </div>
+          <div class="service-card glass" style="text-align: center;">
+            <div class="author-avatar" style="width: 64px; height: 64px; margin: 0 auto 16px; font-size: 1.2rem;">PD</div>
+            <h3>Phạm Dung</h3>
+            <p style="color: var(--accent); margin-bottom: 8px;">Compliance Specialist</p>
+            <p style="font-size: 0.85rem;">dung.pham@securex.vn</p>
+            <div style="margin-top: 16px;">
+              <span class="status-badge active">Online</span>
+            </div>
+          </div>
+          <div class="service-card glass" style="text-align: center;">
+            <div class="author-avatar" style="width: 64px; height: 64px; margin: 0 auto 16px; font-size: 1.2rem;">VH</div>
+            <h3>Võ Hùng</h3>
+            <p style="color: var(--accent); margin-bottom: 8px;">Penetration Tester</p>
+            <p style="font-size: 0.85rem;">hung.vo@securex.vn</p>
+            <div style="margin-top: 16px;">
+              <span class="status-badge active">Online</span>
+            </div>
+          </div>
+          <div class="service-card glass" style="text-align: center;">
+            <div class="author-avatar" style="width: 64px; height: 64px; margin: 0 auto 16px; font-size: 1.2rem;">AD</div>
+            <h3>Admin SecureX</h3>
+            <p style="color: var(--accent); margin-bottom: 8px;">Super Admin</p>
+            <p style="font-size: 0.85rem;">admin@securex.vn</p>
+            <div style="margin-top: 16px;">
+              <span class="status-badge active">Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/admin.js"></script>
+  <script>if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';</script>
+</body>
+</html>

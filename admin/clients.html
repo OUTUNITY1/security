@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khách hàng — SecureX Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo"><div class="logo-icon">🛡</div> SecureX</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Tổng quan</div>
+          <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+          <a href="threats.html"><span class="icon">⚠</span> Threats <span class="badge">12</span></a>
+          <a href="tickets.html"><span class="icon">🎫</span> Tickets <span class="badge">5</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Quản lý</div>
+          <a href="clients.html" class="active"><span class="icon">👥</span> Khách hàng</a>
+          <a href="reports.html"><span class="icon">📋</span> Báo cáo</a>
+          <a href="assets.html"><span class="icon">💻</span> Assets</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ thống</div>
+          <a href="settings.html"><span class="icon">⚙</span> Cài đặt</a>
+          <a href="team.html"><span class="icon">🧑‍💻</span> Đội ngũ</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="logout()">
+          <div class="user-avatar">AD</div>
+          <div class="user-details"><h5>Admin SecureX</h5><span>Super Admin</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Quản lý Khách hàng</h1>
+          <p>Danh sách và trạng thái bảo mật của clients</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm" onclick="openClientModal()">+ Thêm Client</button>
+          <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="stats-cards" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 28px;">
+          <div class="stat-card glass"><div class="stat-icon blue">👥</div><h3>1,247</h3><p>Total clients</p></div>
+          <div class="stat-card glass"><div class="stat-icon green">✅</div><h3>1,189</h3><p>Healthy</p></div>
+          <div class="stat-card glass"><div class="stat-icon orange">⚠</div><h3>42</h3><p>Need attention</p></div>
+          <div class="stat-card glass"><div class="stat-icon red">🔥</div><h3>16</h3><p>Critical</p></div>
+        </div>
+
+        <div class="dashboard-card glass">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Industry</th>
+                  <th>Package</th>
+                  <th>Health Score</th>
+                  <th>Threats (30d)</th>
+                  <th>Open Tickets</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>TechViet Bank</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">contact@techviet.vn</span></td>
+                  <td>Banking</td>
+                  <td>Enterprise SOC</td>
+                  <td style="color:var(--success);font-weight:600;">94%</td>
+                  <td>4,521</td>
+                  <td>3</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                  <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+                </tr>
+                <tr>
+                  <td><strong>CloudPay Fintech</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">sec@cloudpay.vn</span></td>
+                  <td>Fintech</td>
+                  <td>AI Detection Pro</td>
+                  <td style="color:var(--warning);font-weight:600;">72%</td>
+                  <td>12,340</td>
+                  <td>7</td>
+                  <td><span class="status-badge pending">Attention</span></td>
+                  <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+                </tr>
+                <tr>
+                  <td><strong>MediCare VN</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">it@medicare.vn</span></td>
+                  <td>Healthcare</td>
+                  <td>Compliance Suite</td>
+                  <td style="color:var(--success);font-weight:600;">98%</td>
+                  <td>1,203</td>
+                  <td>1</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                  <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+                </tr>
+                <tr>
+                  <td><strong>LogiTrans Asia</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">security@logitrans.com</span></td>
+                  <td>Logistics</td>
+                  <td>Cloud Security</td>
+                  <td style="color:var(--danger);font-weight:600;">58%</td>
+                  <td>8,912</td>
+                  <td>5</td>
+                  <td><span class="status-badge critical">Critical</span></td>
+                  <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+                </tr>
+                <tr>
+                  <td><strong>EduTech Solutions</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">admin@edutech.vn</span></td>
+                  <td>Education</td>
+                  <td>Basic Protection</td>
+                  <td style="color:var(--success);font-weight:600;">91%</td>
+                  <td>890</td>
+                  <td>0</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                  <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+                </tr>
+                <tr>
+                  <td><strong>VinaRetail Group</strong><br><span style="font-size:0.8rem;color:var(--text-muted);">ciso@vinaretail.vn</span></td>
+                  <td>Retail</td>
+                  <td>Enterprise SOC</td>
+                  <td style="color:var(--success);font-weight:600;">89%</td>
+                  <td>3,456</td>
+                  <td>2</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                  <td><button class="btn btn-outline btn-sm">Chi tiết</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="clientModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Thêm Client mới</h3>
+        <button class="modal-close" onclick="closeClientModal()">&times;</button>
+      </div>
+      <form id="clientForm">
+        <div class="form-group">
+          <label>Tên công ty</label>
+          <input type="text" placeholder="Tên doanh nghiệp" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email liên hệ</label>
+            <input type="email" placeholder="security@company.com" required>
+          </div>
+          <div class="form-group">
+            <label>Ngành</label>
+            <select>
+              <option>Banking</option>
+              <option>Fintech</option>
+              <option>Healthcare</option>
+              <option>Logistics</option>
+              <option>Retail</option>
+              <option>Education</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Gói dịch vụ</label>
+          <select>
+            <option>Basic Protection</option>
+            <option>AI Detection Pro</option>
+            <option>Cloud Security</option>
+            <option>Compliance Suite</option>
+            <option>Enterprise SOC</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeClientModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary">Thêm Client</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';
+    function openClientModal() { document.getElementById('clientModal').classList.add('show'); }
+    function closeClientModal() { document.getElementById('clientModal').classList.remove('show'); }
+    document.getElementById('clientForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Client đã được thêm thành công!');
+      closeClientModal();
+    });
+  </script>
+</body>
+</html>

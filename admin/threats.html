@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Threats — SecureX Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo"><div class="logo-icon">🛡</div> SecureX</a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Tổng quan</div>
+          <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+          <a href="threats.html" class="active"><span class="icon">⚠</span> Threats <span class="badge">12</span></a>
+          <a href="tickets.html"><span class="icon">🎫</span> Tickets <span class="badge">5</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Quản lý</div>
+          <a href="clients.html"><span class="icon">👥</span> Khách hàng</a>
+          <a href="reports.html"><span class="icon">📋</span> Báo cáo</a>
+          <a href="assets.html"><span class="icon">💻</span> Assets</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ thống</div>
+          <a href="settings.html"><span class="icon">⚙</span> Cài đặt</a>
+          <a href="team.html"><span class="icon">🧑‍💻</span> Đội ngũ</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="logout()">
+          <div class="user-avatar">AD</div>
+          <div class="user-details"><h5>Admin SecureX</h5><span>Super Admin</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Threat Management</h1>
+          <p>Giám sát và quản lý tất cả mối đe dọa</p>
+        </div>
+        <div class="topbar-right">
+          <div class="search-box"><span>🔍</span><input type="text" placeholder="Tìm threat..." id="searchThreat"></div>
+          <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="page-header">
+          <h2>Tất cả Threats</h2>
+          <button class="btn btn-primary btn-sm" onclick="alert('Export threats data...')">⬇ Export CSV</button>
+        </div>
+
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">Tất cả</button>
+          <button class="filter-btn" data-filter="critical">Critical</button>
+          <button class="filter-btn" data-filter="high">High</button>
+          <button class="filter-btn" data-filter="medium">Medium</button>
+          <button class="filter-btn" data-filter="low">Low</button>
+          <button class="filter-btn" data-filter="open">Open</button>
+          <button class="filter-btn" data-filter="resolved">Resolved</button>
+        </div>
+
+        <div class="dashboard-card glass">
+          <div class="table-wrapper">
+            <table id="threatsTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Threat Name</th>
+                  <th>Type</th>
+                  <th>Severity</th>
+                  <th>Source IP / Host</th>
+                  <th>Client</th>
+                  <th>Status</th>
+                  <th>Detected</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-severity="critical" data-status="resolved">
+                  <td>#T-9841</td>
+                  <td>LockBit Ransomware Attempt</td>
+                  <td>Malware</td>
+                  <td><span class="status-badge critical">Critical</span></td>
+                  <td>192.168.1.45</td>
+                  <td>TechViet Bank</td>
+                  <td><span class="status-badge resolved">Blocked</span></td>
+                  <td>2 phút trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9841')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="high" data-status="resolved">
+                  <td>#T-9838</td>
+                  <td>SSH Brute-force Attack</td>
+                  <td>Brute Force</td>
+                  <td><span class="status-badge high">High</span></td>
+                  <td>103.45.67.89</td>
+                  <td>CloudPay Fintech</td>
+                  <td><span class="status-badge resolved">Blocked</span></td>
+                  <td>15 phút trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9838')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="medium" data-status="open">
+                  <td>#T-9835</td>
+                  <td>Suspicious PowerShell</td>
+                  <td>Malware</td>
+                  <td><span class="status-badge medium">Medium</span></td>
+                  <td>Endpoint-SRV-03</td>
+                  <td>LogiTrans Asia</td>
+                  <td><span class="status-badge pending">Investigating</span></td>
+                  <td>32 phút trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9835')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="high" data-status="resolved">
+                  <td>#T-9832</td>
+                  <td>Phishing Campaign</td>
+                  <td>Phishing</td>
+                  <td><span class="status-badge high">High</span></td>
+                  <td>Email Gateway</td>
+                  <td>MediCare VN</td>
+                  <td><span class="status-badge resolved">Quarantined</span></td>
+                  <td>1 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9832')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="medium" data-status="open">
+                  <td>#T-9829</td>
+                  <td>Unusual Outbound Traffic</td>
+                  <td>Exfiltration</td>
+                  <td><span class="status-badge medium">Medium</span></td>
+                  <td>DB-Server-01</td>
+                  <td>CloudPay Fintech</td>
+                  <td><span class="status-badge open">Open</span></td>
+                  <td>2 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9829')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="critical" data-status="open">
+                  <td>#T-9825</td>
+                  <td>Zero-day Exploit Attempt</td>
+                  <td>Exploit</td>
+                  <td><span class="status-badge critical">Critical</span></td>
+                  <td>45.33.12.78</td>
+                  <td>LogiTrans Asia</td>
+                  <td><span class="status-badge open">Open</span></td>
+                  <td>3 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9825')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="low" data-status="resolved">
+                  <td>#T-9820</td>
+                  <td>Port Scan Detected</td>
+                  <td>Recon</td>
+                  <td><span class="status-badge low">Low</span></td>
+                  <td>88.12.45.33</td>
+                  <td>EduTech Solutions</td>
+                  <td><span class="status-badge resolved">Blocked</span></td>
+                  <td>5 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9820')">Chi tiết</button></td>
+                </tr>
+                <tr data-severity="high" data-status="resolved">
+                  <td>#T-9815</td>
+                  <td>SQL Injection Attempt</td>
+                  <td>Web Attack</td>
+                  <td><span class="status-badge high">High</span></td>
+                  <td>WAF-01</td>
+                  <td>TechViet Bank</td>
+                  <td><span class="status-badge resolved">Blocked</span></td>
+                  <td>6 giờ trước</td>
+                  <td><button class="btn btn-outline btn-sm" onclick="viewThreat('#T-9815')">Chi tiết</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="threatModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Threat Details</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div id="modalBody">
+        <p style="color: var(--text-secondary);">Loading...</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Đóng</button>
+        <button class="btn btn-success" onclick="alert('Threat resolved!'); closeModal();">Mark Resolved</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    if (!localStorage.getItem('securex_auth')) window.location.href = '../login.html';
+
+    // Filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('#threatsTable tbody tr').forEach(row => {
+          if (filter === 'all') {
+            row.style.display = '';
+          } else if (filter === 'open' || filter === 'resolved') {
+            row.style.display = row.dataset.status === filter || (filter === 'open' && row.dataset.status === 'open') ? '' : 'none';
+            if (filter === 'open' && row.dataset.status === 'open') row.style.display = '';
+            else if (filter === 'resolved' && row.dataset.status === 'resolved') row.style.display = '';
+            else if (filter !== 'all') row.style.display = (row.dataset.status === filter) ? '' : 'none';
+          } else {
+            row.style.display = row.dataset.severity === filter ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // Search
+    document.getElementById('searchThreat').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('#threatsTable tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    function viewThreat(id) {
+      document.getElementById('modalTitle').textContent = 'Threat ' + id;
+      document.getElementById('modalBody').innerHTML = `
+        <div style="display: grid; gap: 16px;">
+          <div><strong style="color: var(--text-muted); font-size: 0.85rem;">Mô tả</strong><p style="margin-top: 4px;">Phát hiện hành vi bất thường liên quan đến ${id}. Hệ thống AI đã tự động cô lập endpoint và chặn kết nối.</p></div>
+          <div class="form-row">
+            <div><strong style="color: var(--text-muted); font-size: 0.85rem;">Severity</strong><p style="margin-top: 4px;"><span class="status-badge critical">Critical</span></p></div>
+            <div><strong style="color: var(--text-muted); font-size: 0.85rem;">Confidence</strong><p style="margin-top: 4px;">97.3%</p></div>
+          </div>
+          <div><strong style="color: var(--text-muted); font-size: 0.85rem;">MITRE ATT&CK</strong><p style="margin-top: 4px;">T1486 — Data Encrypted for Impact</p></div>
+          <div><strong style="color: var(--text-muted); font-size: 0.85rem;">Recommended Action</strong><p style="margin-top: 4px;">Isolate host, scan with EDR, review recent file changes, reset credentials.</p></div>
+        </div>
+      `;
+      document.getElementById('threatModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('threatModal').classList.remove('show');
+    }
+  </script>
+</body>
+</html>

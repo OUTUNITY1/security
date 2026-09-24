@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — SecureX Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">🛡</div>
+          SecureX
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Tổng quan</div>
+          <a href="dashboard.html" class="active"><span class="icon">📊</span> Dashboard</a>
+          <a href="threats.html"><span class="icon">⚠</span> Threats <span class="badge">12</span></a>
+          <a href="tickets.html"><span class="icon">🎫</span> Tickets <span class="badge">5</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Quản lý</div>
+          <a href="clients.html"><span class="icon">👥</span> Khách hàng</a>
+          <a href="reports.html"><span class="icon">📋</span> Báo cáo</a>
+          <a href="assets.html"><span class="icon">💻</span> Assets</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ thống</div>
+          <a href="settings.html"><span class="icon">⚙</span> Cài đặt</a>
+          <a href="team.html"><span class="icon">🧑‍💻</span> Đội ngũ</a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" onclick="logout()">
+          <div class="user-avatar">AD</div>
+          <div class="user-details">
+            <h5>Admin SecureX</h5>
+            <span>Super Admin</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Dashboard</h1>
+          <p>Chào mừng trở lại — Tổng quan bảo mật hôm nay</p>
+        </div>
+        <div class="topbar-right">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Tìm kiếm threats, clients...">
+          </div>
+          <button class="icon-btn" title="Thông báo">
+            🔔
+            <span class="notif-dot"></span>
+          </button>
+          <button class="icon-btn" onclick="toggleSidebar()" title="Menu">☰</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+          <div class="stat-card glass">
+            <div class="stat-icon blue">🛡</div>
+            <span class="trend up">↑ 12%</span>
+            <h3>15,847</h3>
+            <p>Threats blocked hôm nay</p>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon purple">🎫</div>
+            <span class="trend up">↑ 3</span>
+            <h3>28</h3>
+            <p>Tickets đang mở</p>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon green">✅</div>
+            <span class="trend up">↑ 5%</span>
+            <h3>99.98%</h3>
+            <p>Uptime hệ thống</p>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon orange">👥</div>
+            <span class="trend up">↑ 8</span>
+            <h3>1,247</h3>
+            <p>Khách hàng active</p>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="dashboard-row">
+          <div class="dashboard-card glass">
+            <div class="card-header">
+              <h3>Threats theo thời gian</h3>
+              <select style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 6px 12px; border-radius: 8px; font-family: var(--font); font-size: 0.85rem;">
+                <option>7 ngày qua</option>
+                <option>30 ngày</option>
+                <option>90 ngày</option>
+              </select>
+            </div>
+            <div class="chart-container">
+              <canvas id="threatsChart"></canvas>
+            </div>
+          </div>
+          <div class="dashboard-card glass">
+            <div class="card-header">
+              <h3>Phân loại Threats</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="typesChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tables Row -->
+        <div class="dashboard-row">
+          <div class="dashboard-card glass">
+            <div class="card-header">
+              <h3>Threats gần đây</h3>
+              <a href="threats.html" class="btn btn-outline btn-sm">Xem tất cả</a>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Threat</th>
+                    <th>Severity</th>
+                    <th>Source</th>
+                    <th>Status</th>
+                    <th>Thời gian</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ransomware attempt — LockBit variant</td>
+                    <td><span class="status-badge critical">Critical</span></td>
+                    <td>192.168.1.45</td>
+                    <td><span class="status-badge resolved">Blocked</span></td>
+                    <td>2 phút trước</td>
+                  </tr>
+                  <tr>
+                    <td>Brute-force SSH attack</td>
+                    <td><span class="status-badge high">High</span></td>
+                    <td>103.45.67.89</td>
+                    <td><span class="status-badge resolved">Blocked</span></td>
+                    <td>15 phút trước</td>
+                  </tr>
+                  <tr>
+                    <td>Suspicious PowerShell execution</td>
+                    <td><span class="status-badge medium">Medium</span></td>
+                    <td>Endpoint-SRV-03</td>
+                    <td><span class="status-badge pending">Investigating</span></td>
+                    <td>32 phút trước</td>
+                  </tr>
+                  <tr>
+                    <td>Phishing email campaign detected</td>
+                    <td><span class="status-badge high">High</span></td>
+                    <td>Email Gateway</td>
+                    <td><span class="status-badge resolved">Quarantined</span></td>
+                    <td>1 giờ trước</td>
+                  </tr>
+                  <tr>
+                    <td>Unusual outbound traffic spike</td>
+                    <td><span class="status-badge medium">Medium</span></td>
+                    <td>DB-Server-01</td>
+                    <td><span class="status-badge open">Open</span></td>
+                    <td>2 giờ trước</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="dashboard-card glass">
+            <div class="card-header">
+              <h3>Hoạt động gần đây</h3>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-dot red"></div>
+                <div class="activity-content">
+                  <p><strong>Critical threat blocked</strong> — LockBit ransomware trên Endpoint-SRV-12</p>
+                  <span>2 phút trước</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot green"></div>
+                <div class="activity-content">
+                  <p><strong>Ticket #2847 resolved</strong> — Phishing incident tại TechViet Bank</p>
+                  <span>18 phút trước</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot blue"></div>
+                <div class="activity-content">
+                  <p><strong>New client onboarded</strong> — MediCare VN đã kích hoạt SOC package</p>
+                  <span>45 phút trước</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot orange"></div>
+                <div class="activity-content">
+                  <p><strong>Vulnerability scan completed</strong> — CloudPay Fintech (42 findings)</p>
+                  <span>1 giờ trước</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot purple"></div>
+                <div class="activity-content">
+                  <p><strong>Policy updated</strong> — Firewall rules updated cho zone DMZ</p>
+                  <span>2 giờ trước</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot green"></div>
+                <div class="activity-content">
+                  <p><strong>Compliance report generated</strong> — ISO 27001 Q3 2026</p>
+                  <span>3 giờ trước</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom row: Clients overview -->
+        <div class="dashboard-card glass">
+          <div class="card-header">
+            <h3>Khách hàng cần chú ý</h3>
+            <a href="clients.html" class="btn btn-outline btn-sm">Quản lý clients</a>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Khách hàng</th>
+                  <th>Gói dịch vụ</th>
+                  <th>Threats (7d)</th>
+                  <th>Open Tickets</th>
+                  <th>Health Score</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>TechViet Bank</strong></td>
+                  <td>Enterprise SOC</td>
+                  <td>1,245</td>
+                  <td>3</td>
+                  <td style="color: var(--success);">94%</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                </tr>
+                <tr>
+                  <td><strong>CloudPay Fintech</strong></td>
+                  <td>AI Detection Pro</td>
+                  <td>3,891</td>
+                  <td>7</td>
+                  <td style="color: var(--warning);">72%</td>
+                  <td><span class="status-badge pending">Attention</span></td>
+                </tr>
+                <tr>
+                  <td><strong>MediCare VN</strong></td>
+                  <td>Compliance Suite</td>
+                  <td>456</td>
+                  <td>1</td>
+                  <td style="color: var(--success);">98%</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                </tr>
+                <tr>
+                  <td><strong>LogiTrans Asia</strong></td>
+                  <td>Cloud Security</td>
+                  <td>2,103</td>
+                  <td>5</td>
+                  <td style="color: var(--danger);">58%</td>
+                  <td><span class="status-badge critical">Critical</span></td>
+                </tr>
+                <tr>
+                  <td><strong>EduTech Solutions</strong></td>
+                  <td>Basic Protection</td>
+                  <td>312</td>
+                  <td>0</td>
+                  <td style="color: var(--success);">91%</td>
+                  <td><span class="status-badge active">Healthy</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script>
+    // Auth check
+    if (!localStorage.getItem('securex_auth')) {
+      window.location.href = '../login.html';
+    }
+
+    // Charts
+    const threatsCtx = document.getElementById('threatsChart').getContext('2d');
+    new Chart(threatsCtx, {
+      type: 'line',
+      data: {
+        labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+        datasets: [{
+          label: 'Threats Blocked',
+          data: [12400, 15200, 13800, 16100, 14500, 17800, 15847],
+          borderColor: '#00f0ff',
+          backgroundColor: 'rgba(0, 240, 255, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#00f0ff',
+          pointRadius: 4
+        }, {
+          label: 'False Positives',
+          data: [320, 280, 310, 250, 290, 240, 210],
+          borderColor: '#7c3aed',
+          backgroundColor: 'rgba(124, 58, 237, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#7c3aed',
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: '#94a3b8', font: { family: 'Inter' } }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#64748b' },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            ticks: { color: '#64748b' },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
+    });
+
+    const typesCtx = document.getElementById('typesChart').getContext('2d');
+    new Chart(typesCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Malware', 'Phishing', 'Brute Force', 'DDoS', 'Insider', 'Other'],
+        datasets: [{
+          data: [32, 24, 18, 12, 8, 6],
+          backgroundColor: [
+            '#00f0ff',
+            '#7c3aed',
+            '#10b981',
+            '#f59e0b',
+            '#ef4444',
+            '#64748b'
+          ],
+          borderWidth: 0,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#94a3b8', font: { family: 'Inter', size: 12 }, padding: 16 }
+          }
+        },
+        cutout: '65%'
+      }
+    });
+  </script>
+</body>
+</html>
