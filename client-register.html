@@ -165,7 +165,7 @@
           }
         };
 
-        await database.ref('users/' + user.uid).set(userData);
+        await userRef(user.uid).set(userData);
 
         sucEl.style.display = 'block';
         sucEl.textContent = 'Đăng ký thành công! Bạn có thể đăng nhập ngay.';

@@ -1374,3 +1374,307 @@ table tr:hover td {
     display: none;
   }
 }
+/* ===== AI Security Bot Widget ===== */
+.ai-bot-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  font-family: var(--font);
+}
+
+.ai-bot-toggle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gradient);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 240, 255, 0.35);
+  position: relative;
+  transition: var(--transition);
+}
+
+.ai-bot-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 40px rgba(0, 240, 255, 0.5);
+}
+
+.ai-bot-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.ai-bot-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 240, 255, 0.5);
+  animation: botPulse 2s ease-out infinite;
+}
+
+@keyframes botPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.ai-bot-panel {
+  position: absolute;
+  bottom: 72px;
+  right: 0;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 520px;
+  max-height: calc(100vh - 120px);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.96);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.ai-bot-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.ai-bot-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(124, 58, 237, 0.12));
+  border-bottom: 1px solid var(--border);
+}
+
+.ai-bot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.ai-bot-header strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.ai-bot-status {
+  font-size: 0.75rem;
+  color: var(--success);
+}
+
+.ai-bot-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.ai-bot-close:hover {
+  color: var(--text-primary);
+}
+
+.ai-bot-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-msg {
+  display: flex;
+  max-width: 88%;
+}
+
+.ai-msg.bot {
+  align-self: flex-start;
+}
+
+.ai-msg.user {
+  align-self: flex-end;
+}
+
+.ai-msg-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.ai-msg.bot .ai-msg-bubble {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+  color: var(--text-primary);
+}
+
+.ai-msg.user .ai-msg-bubble {
+  background: var(--gradient);
+  color: #0a0e17;
+  font-weight: 500;
+  border-bottom-right-radius: 4px;
+}
+
+.ai-msg.typing .ai-msg-bubble {
+  display: flex;
+  gap: 5px;
+  padding: 14px 18px;
+}
+
+.ai-msg.typing .dot {
+  width: 7px;
+  height: 7px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  animation: typingDot 1.2s infinite ease-in-out;
+}
+
+.ai-msg.typing .dot:nth-child(2) { animation-delay: 0.2s; }
+.ai-msg.typing .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.ai-bot-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 12px;
+}
+
+.ai-bot-suggestions button {
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: var(--accent);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.ai-bot-suggestions button:hover {
+  background: rgba(0, 240, 255, 0.18);
+  border-color: var(--accent);
+}
+
+.ai-bot-input-area {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ai-bot-input-area input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.ai-bot-input-area input:focus {
+  border-color: var(--accent);
+}
+
+.ai-bot-input-area input::placeholder {
+  color: var(--text-muted);
+}
+
+.ai-bot-input-area button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--gradient);
+  border: none;
+  color: #0a0e17;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.ai-bot-input-area button:hover {
+  transform: scale(1.05);
+}
+
+/* Client dashboard AI insights card */
+.ai-insights-card {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(124, 58, 237, 0.08));
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.ai-insights-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+}
+
+.ai-insights-card .insight-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.ai-insights-card .insight-item:last-child {
+  border-bottom: none;
+}
+
+.ai-insights-card .insight-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .ai-bot-widget {
+    bottom: 16px;
+    right: 16px;
+  }
+  .ai-bot-panel {
+    width: calc(100vw - 32px);
+    height: 70vh;
+    bottom: 68px;
+  }
+}

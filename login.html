@@ -106,8 +106,8 @@
           uid: user.uid
         }));
 
-        // Update last login in DB
-        await database.ref('users/' + user.uid).update({
+        // Update last login in DB (chỉ ghi profile của chính mình – tuân thủ rules)
+        await userRef(user.uid).update({
           email: user.email,
           role: 'admin',
           lastLogin: firebase.database.ServerValue.TIMESTAMP,

@@ -79,12 +79,12 @@
         const user = userCredential.user;
 
         // Update last login
-        await database.ref('users/' + user.uid).update({
+        await userRef(user.uid).update({
           lastLogin: firebase.database.ServerValue.TIMESTAMP
         });
 
         // Load profile
-        const snapshot = await database.ref('users/' + user.uid).once('value');
+        const snapshot = await userRef(user.uid).once('value');
         const profile = snapshot.val() || {};
 
         localStorage.setItem('securex_client_auth', 'true');

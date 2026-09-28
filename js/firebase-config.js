@@ -23,6 +23,30 @@ function isAdminUser(user) {
   return user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 }
 
+/**
+ * Security Rules đang áp dụng (chính xác theo yêu cầu):
+ * {
+ *   "rules": {
+ *     "users": {
+ *       "$user_id": {
+ *         ".read": "$user_id === auth.uid",
+ *         ".write": "$user_id === auth.uid"
+ *       }
+ *     }
+ *   }
+ * }
+ *
+ * → Mỗi user CHỈ được đọc/ghi dữ liệu của chính mình tại /users/{uid}
+ * → Admin KHÔNG thể list toàn bộ clients (cần mở rộng rules nếu muốn)
+ * → /leads không được cover → contact form sẽ fail write nếu không thêm rules
+ */
+
+// Safe helper: chỉ thao tác trên dữ liệu của chính user đang login
+function userRef(uid) {
+  if (!uid) throw new Error('UID is required');
+  return database.ref('users/' + uid);
+}
+
 // Protect admin pages - call on every admin page load
 function requireAdminAuth() {
   return new Promise((resolve, reject) => {
@@ -51,6 +75,8 @@ function doLogout() {
     auth.signOut().then(() => {
       localStorage.removeItem("securex_auth");
       localStorage.removeItem("securex_user");
+      localStorage.removeItem("securex_client_auth");
+      localStorage.removeItem("securex_client_user");
       window.location.href = window.location.pathname.includes("/admin/") ? "../login.html" : "login.html";
     });
   }
