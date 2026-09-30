@@ -45,10 +45,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Contact form → lưu vào Firebase
-// Lưu ý: Rules hiện tại chỉ cover /users/{uid}. 
-// Để form public hoạt động cần thêm rules cho /leads trong Firebase Console:
-// "leads": { ".write": true, ".read": "auth != null" }
+// Contact form → dùng Anonymous Auth rồi lưu vào /leads
+// Cần bật Anonymous trong Firebase Console → Authentication → Sign-in method
+// Rules khuyến nghị:
+// "leads": { ".write": "auth != null", ".read": "auth != null" }
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
   contactForm.addEventListener('submit', async function(e) {
@@ -68,11 +68,21 @@ if (contactForm) {
       message: document.getElementById('cf_message')?.value?.trim() || '',
       createdAt: firebase.database.ServerValue.TIMESTAMP,
       status: 'new',
-      source: 'contact_form'
+      source: 'contact_form_anonymous'
     };
 
     try {
-      // Thử ghi vào /leads (cần rules mở)
+      // 1. Đảm bảo có session Anonymous (hoặc giữ user đang login nếu có)
+      let user = auth.currentUser;
+      if (!user) {
+        const cred = await auth.signInAnonymously();
+        user = cred.user;
+      }
+
+      // 2. Ghi lead kèm uid của session hiện tại
+      data.submittedBy = user.uid;
+      data.isAnonymous = user.isAnonymous === true;
+
       const newRef = database.ref('leads').push();
       await newRef.set(data);
 
@@ -80,9 +90,9 @@ if (contactForm) {
       this.reset();
     } catch (err) {
       console.error('Firebase write error:', err);
-      // Fallback UX khi rules chưa mở /leads
-      alert('Cảm ơn bạn đã gửi yêu cầu!\nĐội ngũ SecureX sẽ liên hệ trong vòng 2 giờ làm việc.\n\n(Lưu ý kỹ thuật: Rules Firebase hiện chỉ cho phép /users/{uid}. Hãy thêm rules cho /leads nếu muốn lưu form vào DB.)');
-      this.reset();
+      const msg = (err && err.code) ? err.code : (err && err.message) ? err.message : String(err);
+      alert('Không thể gửi yêu cầu. Vui lòng thử lại sau.\n\nChi tiết kỹ thuật: ' + msg +
+        '\n\n(Kiểm tra: đã bật Anonymous Auth + rules /leads cho phép auth != null chưa?)');
     } finally {
       btn.disabled = false;
       btn.textContent = originalText;

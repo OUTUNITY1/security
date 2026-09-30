@@ -38,7 +38,14 @@ function isAdminUser(user) {
  *
  * → Mỗi user CHỈ được đọc/ghi dữ liệu của chính mình tại /users/{uid}
  * → Admin KHÔNG thể list toàn bộ clients (cần mở rộng rules nếu muốn)
- * → /leads không được cover → contact form sẽ fail write nếu không thêm rules
+ * → Form tư vấn dùng Anonymous Auth → cần thêm rules cho /leads:
+ *
+ * "leads": {
+ *   ".write": "auth != null",
+ *   ".read": "auth != null"
+ * }
+ *
+ * Và bật Anonymous trong Firebase Console → Authentication → Sign-in method.
  */
 
 // Safe helper: chỉ thao tác trên dữ liệu của chính user đang login

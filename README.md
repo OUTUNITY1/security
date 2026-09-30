@@ -2,6 +2,9 @@
 
 Website demo cho công ty bảo mật mạng (Cybersecurity) với giao diện hiện đại năm 2026 + **Firebase Auth & Realtime Database** + **AI Security Bot**.
 
+**GitHub:** https://github.com/OUTUNITY1/security  
+**Domain:** baove.io.vn
+
 ## Cấu trúc
 
 ```
@@ -15,7 +18,7 @@ security-main/
 │   └── style.css           # Glassmorphism + AI Bot widget styles
 ├── js/
 │   ├── firebase-config.js  # Firebase init + helpers + strict rules note
-│   ├── main.js             # JS trang khách + contact form + AI Bot
+│   ├── main.js             # JS trang khách + contact form (Anonymous Auth) + AI Bot
 │   └── admin.js            # JS admin + auth protection
 └── admin/
     ├── dashboard.html
@@ -34,8 +37,10 @@ security-main/
 **Realtime Database:** `https://findhome777-default-rtdb.firebaseio.com`
 
 ### Auth
+
 - **Admin:** Chỉ email `lga775385@gmail.com` được phép đăng nhập trang Admin.
 - **Client:** Đăng ký / đăng nhập tự do qua `client-register.html` / `client-login.html`.
+- **Form tư vấn (Contact):** Dùng **Anonymous Auth** — tự `signInAnonymously()` trước khi ghi `/leads`.
 
 ### Cấu trúc dữ liệu lưu trong Realtime DB
 
@@ -47,9 +52,9 @@ security-main/
   - metrics: { uptime, threatsBlocked, incidentsResolved, avgResponseMs }
   - createdAt, lastLogin
 
-/leads/{pushId}              # (cần thêm rules riêng để form liên hệ hoạt động)
+/leads/{pushId}              # Form tư vấn (cần Anonymous Auth + rules)
   - name, email, phone, country, service, industry, message
-  - createdAt, status, source
+  - createdAt, status, source, submittedBy, isAnonymous
 ```
 
 ### Security Rules đang áp dụng (đúng theo yêu cầu)
@@ -68,14 +73,20 @@ security-main/
 ```
 
 **Hệ quả của rules này:**
+
 | Thao tác | Kết quả |
 |----------|---------|
 | Client đọc/ghi `/users/{ownUid}` | ✅ Được phép |
 | Admin list toàn bộ clients | ❌ PERMISSION_DENIED |
-| Form liên hệ ghi `/leads` | ❌ Cần thêm rules |
+| Form liên hệ ghi `/leads` (không auth) | ❌ Cần rules + Anonymous |
 | Admin đọc/ghi profile của chính mình | ✅ Được phép |
 
-**Nếu muốn Admin xem danh sách clients + form liên hệ hoạt động**, mở rộng rules trong Firebase Console:
+### Cấu hình bắt buộc để Form tư vấn hoạt động
+
+1. **Bật Anonymous Auth** trong Firebase Console:  
+   Authentication → Sign-in method → Anonymous → Enable
+
+2. **Mở rộng rules** (khuyến nghị):
 
 ```json
 {
@@ -87,7 +98,7 @@ security-main/
       }
     },
     "leads": {
-      ".write": true,
+      ".write": "auth != null",
       ".read": "auth != null"
     }
   }
@@ -98,7 +109,9 @@ security-main/
 
 1. Mở `index.html` bằng Live Server hoặc bất kỳ static server nào.
 2. Tạo tài khoản Admin trước trong Firebase Console (Authentication → Users) với email `lga775385@gmail.com`.
-3. Client đăng ký trực tiếp trên trang web → dữ liệu lưu vào `/users/{uid}`.
+3. Bật **Anonymous** Sign-in method.
+4. Cập nhật rules như trên để form tư vấn ghi được `/leads`.
+5. Client đăng ký trực tiếp trên trang web → dữ liệu lưu vào `/users/{uid}`.
 
 ## Đăng nhập
 
@@ -106,6 +119,7 @@ security-main/
 |---------|-----|-------|
 | **Admin** | `login.html` | **chỉ** `lga775385@gmail.com` |
 | **Client** | `client-login.html` / `client-register.html` | bất kỳ (tự do) |
+| **Form tư vấn** | `index.html#contact` | Anonymous (tự động) |
 
 ## Tính năng đã tích hợp
 
@@ -114,7 +128,7 @@ security-main/
 - Client lưu profile + metrics vào `/users/{uid}` (tuân thủ strict rules)
 - Client Dashboard đọc dữ liệu thật từ DB + **AI Security Insights**
 - **AI Security Bot** floating widget trên trang chủ & client dashboard (rule-based)
-- Form liên hệ (cần rules `/leads` để lưu được)
+- **Form tư vấn dùng Anonymous Auth** → ghi `/leads` an toàn hơn so với write công khai
 - Admin Clients page: hiển thị dữ liệu demo thực tế (vì rules không cho list)
 
 ## UI/UX tối ưu
@@ -131,3 +145,7 @@ security-main/
 - Firebase Auth + Realtime Database (compat SDK)
 - Chart.js 4 (admin)
 - Google Fonts (Inter)
+
+## License
+
+Apache-2.0 — xem file `LICENSE`.
